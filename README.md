@@ -169,7 +169,7 @@ python app.py
 You should see:
 
 ```
- * Running on http://0.0.0.0:5000
+ * Running on http://127.0.0.1:5000
  * Debug mode: on
 ```
 
