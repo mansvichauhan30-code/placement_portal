@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Dashboard – PlacePrep Portal{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- Welcome card -->
+<div class="welcome-card fade-in">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+    <div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:4px">Good day 👋</p>
+      <h2 data-user-name>{{ session.get('name','Student') }}</h2>
+      <p style="font-size:13px;margin-top:4px">Track your placement readiness and keep up the momentum.</p>
+    </div>
+    <div style="text-align:center">
+      <div style="position:relative;display:inline-block">
+        <div id="readiness-circle"></div>
+        <div class="cp-text" id="readiness-text"
+             style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+                    font-family:var(--font-head);font-weight:800;font-size:18px">–</div>
+      </div>
+      <div style="font-size:11px;font-weight:700;color:var(--text3);margin-top:4px;letter-spacing:.5px">READINESS</div>
+      <div id="readiness-label" style="font-size:12px;color:var(--accent);font-weight:600;margin-top:2px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Stats row -->
+<div class="grid-4 mb-24">
+  <div class="card card-stat">
+    <span class="stat-icon">📝</span>
+    <span class="stat-value" id="stat-tests">–</span>
+    <span class="stat-label">Tests Attempted</span>
+    <span class="stat-trend">This month</span>
+  </div>
+  <div class="card card-stat">
+    <span class="stat-icon">⭐</span>
+    <span class="stat-value" id="stat-avg">–</span>
+    <span class="stat-label">Average Score</span>
+    <span class="stat-trend">Across all tests</span>
+  </div>
+  <div class="card card-stat">
+    <span class="stat-icon">💻</span>
+    <span class="stat-value" id="stat-problems">–</span>
+    <span class="stat-label">Problems Solved</span>
+    <span class="stat-trend">Accepted solutions</span>
+  </div>
+  <div class="card card-stat">
+    <span class="stat-icon">🎙️</span>
+    <span class="stat-value" id="stat-interviews">–</span>
+    <span class="stat-label">Mock Interviews</span>
+    <span class="stat-trend">Sessions done</span>
+  </div>
+</div>
+
+<div class="grid-2 mb-24">
+  <!-- Subject performance -->
+  <div class="card">
+    <h4 style="margin-bottom:20px">Subject Performance</h4>
+    <div id="subject-bars">
+      <div class="flex-center" style="padding:20px"><div class="spinner"></div></div>
+    </div>
+  </div>
+
+  <!-- Recent activity -->
+  <div class="card">
+    <h4 style="margin-bottom:20px">Recent Activity</h4>
+    <div id="activity-feed">
+      <div class="flex-center" style="padding:20px"><div class="spinner"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick actions -->
+<div class="card mb-24">
+  <h4 style="margin-bottom:16px">Quick Actions</h4>
+  <div class="grid-4">
+    <a href="/aptitude"   class="quick-action"><span class="qa-icon">🧠</span><span class="qa-label">Take Aptitude Test</span></a>
+    <a href="/coding"     class="quick-action"><span class="qa-icon">💻</span><span class="qa-label">Solve Coding Problem</span></a>
+    <a href="/interview"  class="quick-action"><span class="qa-icon">🎙️</span><span class="qa-label">Mock Interview</span></a>
+    <a href="/resume"     class="quick-action"><span class="qa-icon">📄</span><span class="qa-label">Analyze Resume</span></a>
+  </div>
+</div>
+
+<!-- Second stats row -->
+<div class="grid-2">
+  <div class="card card-stat">
+    <span class="stat-icon">🏆</span>
+    <span class="stat-value" id="stat-rank">–</span>
+    <span class="stat-label">National Rank</span>
+    <span class="stat-trend">Among all students</span>
+  </div>
+  <div class="card card-stat">
+    <span class="stat-icon">🎯</span>
+    <span class="stat-value" id="stat-readiness">–</span>
+    <span class="stat-label">Placement Readiness</span>
+    <span class="stat-trend">Composite score</span>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/dashboard.js"></script>
+{% endblock %}

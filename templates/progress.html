@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block title %}Progress Analytics – PlacePrep Portal{% endblock %}
+{% block page_title %}Progress Analytics{% endblock %}
+
+{% block content %}
+<div id="progress-page">
+
+  <div class="page-header">
+    <h2>Progress Analytics</h2>
+    <p>Track your preparation journey with detailed performance insights.</p>
+  </div>
+
+  <!-- Top stats -->
+  <div class="grid-4 mb-24">
+    <div class="card card-stat">
+      <span class="stat-icon">🔥</span>
+      <span class="stat-value">7</span>
+      <span class="stat-label">Day Streak</span>
+      <span class="stat-trend">Keep it up!</span>
+    </div>
+    <div class="card card-stat">
+      <span class="stat-icon">🎯</span>
+      <span class="stat-value" id="ps-readiness">–</span>
+      <span class="stat-label">Readiness Score</span>
+      <span class="stat-trend">Composite</span>
+    </div>
+    <div class="card card-stat">
+      <span class="stat-icon">⏰</span>
+      <span class="stat-value">42h</span>
+      <span class="stat-label">Study Hours</span>
+      <span class="stat-trend">This month</span>
+    </div>
+    <div class="card card-stat">
+      <span class="stat-icon">📊</span>
+      <span class="stat-value" id="ps-tests">–</span>
+      <span class="stat-label">Tests Taken</span>
+      <span class="stat-trend">Total</span>
+    </div>
+  </div>
+
+  <div class="grid-2 mb-24">
+    <!-- Weekly score trend -->
+    <div class="card">
+      <h4 style="margin-bottom:16px">📈 Weekly Score Trend</h4>
+      <div id="weekly-chart">
+        <div class="flex-center" style="padding:20px"><div class="spinner"></div></div>
+      </div>
+    </div>
+
+    <!-- Aptitude by category -->
+    <div class="card">
+      <h4 style="margin-bottom:16px">🧠 Aptitude by Category</h4>
+      <div id="apt-category-bars">
+        <div class="flex-center" style="padding:20px"><div class="spinner"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2 mb-24">
+    <!-- Coding difficulty breakdown -->
+    <div class="card">
+      <h4 style="margin-bottom:16px">💻 Coding Problems Solved</h4>
+      <div id="coding-diff-bars">
+        <div class="flex-center" style="padding:20px"><div class="spinner"></div></div>
+      </div>
+    </div>
+
+    <!-- Activity heatmap -->
+    <div class="card">
+      <h4 style="margin-bottom:12px">🗓️ Activity Heatmap (30 days)</h4>
+      <div id="activity-heatmap" class="heatmap-grid"></div>
+      <div style="display:flex;gap:6px;align-items:center;margin-top:10px;padding:0 8px;font-size:11px;color:var(--text3)">
+        <span>Less</span>
+        <div class="heatmap-cell" style="width:12px;height:12px;border-radius:2px"></div>
+        <div class="heatmap-cell l1" style="width:12px;height:12px;border-radius:2px"></div>
+        <div class="heatmap-cell l2" style="width:12px;height:12px;border-radius:2px"></div>
+        <div class="heatmap-cell l3" style="width:12px;height:12px;border-radius:2px"></div>
+        <div class="heatmap-cell l4" style="width:12px;height:12px;border-radius:2px"></div>
+        <span>More</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skill growth -->
+  <div class="card mb-24">
+    <h4 style="margin-bottom:16px">🚀 Skill Growth Milestones</h4>
+    <div class="grid-2">
+      {% for skill, from_pct, to_pct, done in [
+        ('Array Mastery', 30, 85, True),
+        ('DP Fundamentals', 10, 55, True),
+        ('System Design', 0, 25, False),
+        ('Graph Algorithms', 20, 40, False),
+        ('Verbal Fluency', 60, 80, True),
+        ('Interview Skills', 40, 72, False),
+      ] %}
+      <div class="card2">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:13px;font-weight:600;color:var(--text)">{{ skill }}</span>
+          <span style="font-size:11px;font-weight:700;
+            {% if done %}color:var(--success);background:rgba(0,212,170,.1);
+            {% else %}color:var(--text3);background:var(--bg3);{% endif %}
+            padding:2px 8px;border-radius:4px">
+            {{ '✓ Done' if done else 'In Progress' }}
+          </span>
+        </div>
+        <div class="progress-wrap" style="height:5px;margin-bottom:4px">
+          <div class="progress-bar {% if done %}success{% endif %}" style="width:{{ to_pct }}%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3)">
+          <span>Started at {{ from_pct }}%</span>
+          <span>Now: {{ to_pct }}%</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- More stats -->
+  <div class="grid-3">
+    <div class="card" style="text-align:center">
+      <div style="font-size:36px;margin-bottom:8px">📝</div>
+      <div style="font-family:var(--font-head);font-weight:800;font-size:24px;color:var(--text)"
+           id="ps-tests-2">–</div>
+      <div class="text-xs text-muted mt-8">Tests Completed</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:36px;margin-bottom:8px">💻</div>
+      <div style="font-family:var(--font-head);font-weight:800;font-size:24px;color:var(--text)"
+           id="ps-problems">–</div>
+      <div class="text-xs text-muted mt-8">Problems Solved</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:36px;margin-bottom:8px">🎙️</div>
+      <div style="font-family:var(--font-head);font-weight:800;font-size:24px;color:var(--text)"
+           id="ps-interviews">–</div>
+      <div class="text-xs text-muted mt-8">Interviews Done</div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="/static/js/pages.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    // also load profile stats for the mini counters
+    try {
+      const s = await API.get('/api/dashboard/stats');
+      ['ps-tests','ps-tests-2'].forEach(id => {
+        const e = document.getElementById(id); if(e) e.textContent = s.tests_attempted;
+      });
+      const pp = document.getElementById('ps-problems');   if(pp) pp.textContent = s.problems_solved;
+      const pi = document.getElementById('ps-interviews'); if(pi) pi.textContent = s.interviews_done;
+      const pr = document.getElementById('ps-readiness');  if(pr) pr.textContent = s.readiness + '%';
+    } catch {}
+  });
+</script>
+{% endblock %}

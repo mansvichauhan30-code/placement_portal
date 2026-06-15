@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Study Resources – PlacePrep Portal{% endblock %}
+{% block page_title %}Study Resources{% endblock %}
+
+{% block content %}
+
+  <div class="page-header flex-between flex-wrap" style="gap:12px">
+    <div>
+      <h2>Study Resources</h2>
+      <p>Curated materials to help you ace aptitude, coding, and interviews.</p>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="btn btn-primary btn-sm" data-res-cat="all">All</button>
+      <button class="btn btn-ghost  btn-sm" data-res-cat="Aptitude">Aptitude</button>
+      <button class="btn btn-ghost  btn-sm" data-res-cat="Coding">Coding</button>
+      <button class="btn btn-ghost  btn-sm" data-res-cat="Interview">Interview</button>
+      <button class="btn btn-ghost  btn-sm" data-res-cat="Resume">Resume</button>
+    </div>
+  </div>
+
+  <!-- Featured resource highlight -->
+  <div class="card mb-24" style="background:linear-gradient(135deg,rgba(79,124,255,.12),rgba(124,79,255,.08));border-color:rgba(79,124,255,.3)">
+    <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <div style="font-size:52px">📚</div>
+      <div style="flex:1;min-width:0">
+        <div class="badge badge-blue" style="margin-bottom:8px">Featured Resource</div>
+        <h3 style="margin-bottom:6px">Top 100 Interview Questions</h3>
+        <p class="text-sm">Most asked questions from Google, Amazon, Microsoft, TCS, Infosys — with model answers and tips.</p>
+      </div>
+      <a href="#" class="btn btn-primary" target="_blank">Download PDF →</a>
+    </div>
+  </div>
+
+  <div id="resources-grid" class="grid-2">
+    <div class="flex-center" style="grid-column:1/-1;padding:40px">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+{% endblock %}
+{% block extra_js %}<script src="/static/js/pages.js"></script>{% endblock %}

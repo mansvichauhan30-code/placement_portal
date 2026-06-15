@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block title %}Aptitude Tests – PlacePrep Portal{% endblock %}
+{% block page_title %}Aptitude Tests{% endblock %}
+
+{% block content %}
+
+<!-- ── SELECT VIEW ── -->
+<div id="view-select">
+  <div class="page-header">
+    <h2>Aptitude Tests</h2>
+    <p>Choose a category to start a timed test with instant result analysis.</p>
+  </div>
+
+  <div class="grid-3 mb-24">
+    <div class="test-category-card fade-in" data-cat="quantitative">
+      <div class="cat-icon">📊</div>
+      <h3>Quantitative Aptitude</h3>
+      <p>Numbers, percentages, profit &amp; loss, time–speed–distance, geometry, and algebra with shortcut tricks.</p>
+      <div class="cat-footer">
+        <div>
+          <span class="badge badge-blue">10 Questions</span>
+          <span class="badge badge-orange" style="margin-left:4px">10 min</span>
+        </div>
+        <button class="btn btn-primary btn-sm">Start →</button>
+      </div>
+    </div>
+
+    <div class="test-category-card fade-in" style="animation-delay:.07s" data-cat="logical">
+      <div class="cat-icon">🧩</div>
+      <h3>Logical Reasoning</h3>
+      <p>Series completion, syllogisms, blood relations, coding–decoding, direction sense, and seating arrangements.</p>
+      <div class="cat-footer">
+        <div>
+          <span class="badge badge-blue">10 Questions</span>
+          <span class="badge badge-orange" style="margin-left:4px">10 min</span>
+        </div>
+        <button class="btn btn-primary btn-sm">Start →</button>
+      </div>
+    </div>
+
+    <div class="test-category-card fade-in" style="animation-delay:.14s" data-cat="verbal">
+      <div class="cat-icon">📝</div>
+      <h3>Verbal Ability</h3>
+      <p>Grammar, vocabulary, synonyms, antonyms, para-jumbles, and reading comprehension for placement tests.</p>
+      <div class="cat-footer">
+        <div>
+          <span class="badge badge-blue">10 Questions</span>
+          <span class="badge badge-orange" style="margin-left:4px">10 min</span>
+        </div>
+        <button class="btn btn-primary btn-sm">Start →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Instructions -->
+  <div class="card mb-24">
+    <h4 style="margin-bottom:14px">📋 Test Instructions</h4>
+    <div class="grid-2">
+      <div style="display:flex;gap:10px;font-size:13px;color:var(--text2);margin-bottom:10px">
+        <span style="color:var(--accent);font-weight:700;flex-shrink:0">1.</span>
+        Each test contains 10 multiple-choice questions with a 10-minute timer.
+      </div>
+      <div style="display:flex;gap:10px;font-size:13px;color:var(--text2);margin-bottom:10px">
+        <span style="color:var(--accent);font-weight:700;flex-shrink:0">2.</span>
+        Once started, the timer cannot be paused. Answer all questions.
+      </div>
+      <div style="display:flex;gap:10px;font-size:13px;color:var(--text2);margin-bottom:10px">
+        <span style="color:var(--accent);font-weight:700;flex-shrink:0">3.</span>
+        You can navigate between questions using Prev/Next buttons.
+      </div>
+      <div style="display:flex;gap:10px;font-size:13px;color:var(--text2);margin-bottom:10px">
+        <span style="color:var(--accent);font-weight:700;flex-shrink:0">4.</span>
+        Instant results with explanations are shown after submission.
+      </div>
+    </div>
+  </div>
+
+  <!-- History -->
+  <div class="card">
+    <h4 style="margin-bottom:16px">📊 Recent Test History</h4>
+    <div id="history-list">
+      <div class="flex-center" style="padding:20px"><div class="spinner"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── TEST VIEW ── -->
+<div id="view-test" class="hidden">
+  <div class="quiz-container fade-in">
+    <div class="quiz-header">
+      <div>
+        <h3 style="font-size:16px;text-transform:capitalize" id="test-cat-title">Test</h3>
+        <p class="text-muted text-sm">
+          Question <span id="q-num">1</span> of <span id="q-tot">10</span>
+          &nbsp;·&nbsp;
+          <span id="q-difficulty"></span>
+        </p>
+      </div>
+      <div>
+        <div class="timer-display" id="timer-wrap">
+          <span>⏱</span>
+          <span id="timer">10:00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-wrap quiz-progress-bar">
+      <div class="progress-bar" id="quiz-progress" style="width:0%"></div>
+    </div>
+
+    <!-- Question -->
+    <div class="question-card">
+      <div class="question-num">QUESTION <span id="q-num-2">1</span></div>
+      <div class="question-text" id="question-text">Loading…</div>
+    </div>
+
+    <!-- Options -->
+    <div class="options-grid" id="options-container"></div>
+
+    <!-- Nav buttons -->
+    <div style="display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap">
+      <button class="btn btn-ghost" id="btn-prev" onclick="prevQuestion()">← Previous</button>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-secondary" onclick="submitTest()">Submit Early</button>
+        <button class="btn btn-primary" id="btn-next" onclick="nextQuestion()">Next →</button>
+        <button class="btn btn-primary hidden" id="btn-submit" onclick="submitTest()">Submit Test ✓</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── RESULT VIEW ── -->
+<div id="view-result" class="hidden">
+  <div class="quiz-container fade-in">
+    <div class="card text-center mb-24" style="padding:40px">
+      <div style="font-size:52px;margin-bottom:12px" id="result-emoji">🏆</div>
+      <div class="result-score-circle">
+        <div class="score-num" id="result-score">–</div>
+      </div>
+      <p class="text-muted mt-8 mb-16" id="result-msg"></p>
+      <div style="display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-bottom:20px">
+        <div style="text-align:center">
+          <div style="font-family:var(--font-head);font-weight:800;font-size:24px;color:var(--success)" id="result-correct">–</div>
+          <div class="text-xs text-muted">Correct</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-family:var(--font-head);font-weight:800;font-size:24px;color:var(--text)" id="result-total">–</div>
+          <div class="text-xs text-muted">Total</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="showView('select');loadHistory()">← Back to Tests</button>
+        <button class="btn btn-ghost"   onclick="startTest(state.category)">Retry Same Test</button>
+        <a href="/progress" class="btn btn-secondary">View Analytics</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4 style="margin-bottom:16px">Detailed Answer Review</h4>
+      <div id="answer-review"></div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/aptitude.js"></script>
+<script>
+  // sync the second q-num span
+  const orig = renderQuestion;
+  // patch to update q-num-2
+  document.addEventListener('DOMContentLoaded', () => {
+    const qn2 = document.getElementById('q-num-2');
+    if (qn2) {
+      const obs = new MutationObserver(() => { qn2.textContent = document.getElementById('q-num')?.textContent; });
+      const qn = document.getElementById('q-num');
+      if (qn) obs.observe(qn, {childList:true, characterData:true, subtree:true});
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up – PlacePrep Portal</title>
+  <link rel="stylesheet" href="/static/css/main.css"/>
+  <style>
+    .auth-page {
+      min-height:100vh; display:flex; align-items:center; justify-content:center;
+      padding:20px; position:relative; overflow:hidden;
+    }
+    .auth-blob { position:fixed; border-radius:50%; pointer-events:none; }
+    .auth-blob.b1 { width:500px; height:500px; top:-15%; right:-8%;
+      background:radial-gradient(circle,rgba(79,124,255,.12),transparent 70%); }
+    .auth-blob.b2 { width:400px; height:400px; bottom:-10%; left:-5%;
+      background:radial-gradient(circle,rgba(124,79,255,.1),transparent 70%); }
+    .auth-card {
+      width:100%; max-width:460px;
+      background:var(--surface); border:1px solid var(--border2);
+      border-radius:var(--r); padding:36px;
+      box-shadow:var(--shadow-lg);
+      position:relative; z-index:1;
+      animation:scaleIn .25s ease;
+    }
+    .auth-brand { text-align:center; margin-bottom:24px; }
+    .auth-brand .logo {
+      font-family:var(--font-head); font-weight:800; font-size:22px;
+      background:var(--accent-g);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text; margin-bottom:6px;
+    }
+    .auth-brand p { font-size:14px; color:var(--text2); }
+    .auth-footer { text-align:center; margin-top:20px; font-size:13px; color:var(--text2); }
+    .auth-footer a { color:var(--accent); font-weight:600; }
+    .input-wrap { position:relative; }
+    .input-wrap input { padding-right:40px; }
+    .input-wrap .eye-btn {
+      position:absolute; right:12px; top:50%; transform:translateY(-50%);
+      background:none; border:none; cursor:pointer; font-size:16px; color:var(--text3);
+    }
+    .theme-fab { position:fixed; top:16px; right:16px; z-index:100; }
+    .inline-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    @media(max-width:500px) { .inline-2 { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+
+<div class="auth-blob b1"></div>
+<div class="auth-blob b2"></div>
+
+<button class="btn btn-icon btn-ghost theme-fab" data-theme-toggle>
+  <span data-theme-icon>☀️</span>
+</button>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <div class="logo">PlacePrep Portal</div>
+      <p>Create your free student account</p>
+    </div>
+
+    <form id="signup-form" autocomplete="on">
+      <div id="signup-error" class="alert alert-danger hidden" style="margin-bottom:16px"></div>
+
+      <div class="form-group">
+        <label class="form-label" for="su-name">Full Name *</label>
+        <input class="form-control" type="text" id="su-name"
+               placeholder="Your full name" required autocomplete="name"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="su-email">Email Address *</label>
+        <input class="form-control" type="email" id="su-email"
+               placeholder="your@email.com" required autocomplete="email"/>
+      </div>
+
+      <div class="inline-2">
+        <div class="form-group">
+          <label class="form-label" for="su-password">Password *</label>
+          <div class="input-wrap">
+            <input class="form-control" type="password" id="su-password"
+                   placeholder="Min 6 characters" required autocomplete="new-password"/>
+            <button type="button" class="eye-btn" data-toggle-pwd="su-password">👁</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="su-confirm">Confirm Password *</label>
+          <div class="input-wrap">
+            <input class="form-control" type="password" id="su-confirm"
+                   placeholder="Repeat password" required autocomplete="new-password"/>
+            <button type="button" class="eye-btn" data-toggle-pwd="su-confirm">👁</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="su-college">College / University</label>
+        <input class="form-control" type="text" id="su-college"
+               placeholder="e.g. IIT Delhi, NIT Trichy" autocomplete="organization"/>
+      </div>
+
+      <div class="inline-2">
+        <div class="form-group">
+          <label class="form-label" for="su-year">Year of Study</label>
+          <select class="form-control" id="su-year">
+            <option value="1">Year 1</option>
+            <option value="2">Year 2</option>
+            <option value="3" selected>Year 3</option>
+            <option value="4">Year 4</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="su-branch">Branch / Stream</label>
+          <input class="form-control" type="text" id="su-branch"
+                 placeholder="e.g. CSE, ECE, MCA"/>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top:4px">
+        Create Account
+      </button>
+
+      <p style="font-size:11px;color:var(--text3);text-align:center;margin-top:12px;line-height:1.5">
+        By signing up you agree to our Terms of Service and Privacy Policy.
+      </p>
+    </form>
+
+    <div class="auth-footer">
+      Already have an account? <a href="/login">Login</a>
+    </div>
+    <div class="auth-footer" style="margin-top:8px">
+      <a href="/" style="color:var(--text3)">← Back to home</a>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="/static/js/core.js"></script>
+<script src="/static/js/auth.js"></script>
+</body>
+</html>

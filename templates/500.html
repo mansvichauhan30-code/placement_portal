@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>500 – Server Error | PlacePrep Portal</title>
+  <link rel="stylesheet" href="/static/css/main.css"/>
+  <style>
+    body { display:flex; align-items:center; justify-content:center; min-height:100vh; }
+    .error-box { text-align:center; max-width:480px; padding:40px 24px; }
+    .error-code {
+      font-family:var(--font-head); font-weight:800; font-size:96px; line-height:1;
+      background:linear-gradient(135deg,#ff4f6a,#ff8c00);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text; margin-bottom:8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="error-box fade-in">
+    <div style="font-size:64px;margin-bottom:12px">⚠️</div>
+    <div class="error-code">500</div>
+    <h2 style="margin-bottom:12px">Internal Server Error</h2>
+    <p style="color:var(--text2);margin-bottom:28px">
+      Something went wrong on our end. Please try again in a moment.
+    </p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <a href="/dashboard" class="btn btn-primary">Go to Dashboard</a>
+      <a href="/"          class="btn btn-ghost">Home</a>
+    </div>
+  </div>
+  <div id="toast-container"></div>
+  <script src="/static/js/core.js"></script>
+</body>
+</html>

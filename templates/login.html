@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login – PlacePrep Portal</title>
+  <link rel="stylesheet" href="/static/css/main.css"/>
+  <style>
+    .auth-page {
+      min-height:100vh; display:flex; align-items:center; justify-content:center;
+      padding:20px; position:relative; overflow:hidden;
+    }
+    .auth-blob {
+      position:fixed; border-radius:50%; pointer-events:none;
+    }
+    .auth-blob.b1 {
+      width:500px; height:500px; top:-15%; right:-8%;
+      background:radial-gradient(circle,rgba(79,124,255,.12),transparent 70%);
+    }
+    .auth-blob.b2 {
+      width:400px; height:400px; bottom:-10%; left:-5%;
+      background:radial-gradient(circle,rgba(124,79,255,.1),transparent 70%);
+    }
+    .auth-card {
+      width:100%; max-width:420px;
+      background:var(--surface); border:1px solid var(--border2);
+      border-radius:var(--r); padding:36px;
+      box-shadow:var(--shadow-lg);
+      position:relative; z-index:1;
+      animation:scaleIn .25s ease;
+    }
+    .auth-brand {
+      text-align:center; margin-bottom:28px;
+    }
+    .auth-brand .logo {
+      font-family:var(--font-head); font-weight:800; font-size:22px;
+      background:var(--accent-g);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text; margin-bottom:6px;
+    }
+    .auth-brand p { font-size:14px; color:var(--text2); }
+    .auth-footer { text-align:center; margin-top:20px; font-size:13px; color:var(--text2); }
+    .auth-footer a { color:var(--accent); font-weight:600; }
+    .input-wrap { position:relative; }
+    .input-wrap input { padding-right:40px; }
+    .input-wrap .eye-btn {
+      position:absolute; right:12px; top:50%; transform:translateY(-50%);
+      background:none; border:none; cursor:pointer; font-size:16px; color:var(--text3);
+    }
+    .demo-info {
+      margin-top:16px; padding:12px 14px;
+      background:var(--bg3); border-radius:var(--r2);
+      font-size:12px; color:var(--text2); line-height:1.6;
+    }
+    .theme-fab {
+      position:fixed; top:16px; right:16px;
+      z-index:100;
+    }
+    .divider-text {
+      display:flex; align-items:center; gap:12px;
+      color:var(--text3); font-size:12px; margin:16px 0;
+    }
+    .divider-text::before, .divider-text::after {
+      content:''; flex:1; height:1px; background:var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<div class="auth-blob b1"></div>
+<div class="auth-blob b2"></div>
+
+<button class="btn btn-icon btn-ghost theme-fab" data-theme-toggle>
+  <span data-theme-icon>☀️</span>
+</button>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <div class="logo">PlacePrep Portal</div>
+      <p>Welcome back! Sign in to continue.</p>
+    </div>
+
+    <form id="login-form" autocomplete="on">
+      <div id="login-error" class="alert alert-danger hidden" style="margin-bottom:16px"></div>
+
+      <div class="form-group">
+        <label class="form-label" for="login-email">Email Address</label>
+        <input class="form-control" type="email" id="login-email"
+               name="email" placeholder="your@email.com" required autocomplete="email"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="login-password">Password</label>
+        <div class="input-wrap">
+          <input class="form-control" type="password" id="login-password"
+                 name="password" placeholder="••••••••" required autocomplete="current-password"/>
+          <button type="button" class="eye-btn" data-toggle-pwd="login-password">👁</button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top:8px">
+        Login to Dashboard
+      </button>
+    </form>
+
+    <div class="demo-info">
+      <strong style="color:var(--text)">🔑 Demo Credentials</strong><br>
+      Admin: <code>admin@placeprep.com</code> / <code>admin123</code><br>
+      Student: Register a new account below.
+    </div>
+
+    <div class="auth-footer">
+      Don't have an account? <a href="/signup">Sign up free</a>
+    </div>
+    <div class="auth-footer" style="margin-top:8px">
+      <a href="/" style="color:var(--text3)">← Back to home</a>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="/static/js/core.js"></script>
+<script src="/static/js/auth.js"></script>
+</body>
+</html>

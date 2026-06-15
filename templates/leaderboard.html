@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Leaderboard – PlacePrep Portal{% endblock %}
+{% block page_title %}Leaderboard{% endblock %}
+
+{% block content %}
+
+  <div class="page-header flex-between flex-wrap" style="gap:12px">
+    <div>
+      <h2>Leaderboard</h2>
+      <p>Top performing students across all colleges. Your rank: <strong id="my-rank" style="color:var(--accent)">–</strong></p>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="btn btn-primary btn-sm" data-lb-filter="all">All Time</button>
+      <button class="btn btn-ghost  btn-sm" data-lb-filter="week">This Week</button>
+      <button class="btn btn-ghost  btn-sm" data-lb-filter="month">This Month</button>
+    </div>
+  </div>
+
+  <!-- Podium -->
+  <div class="card mb-24" style="overflow:hidden">
+    <h4 style="margin-bottom:4px;text-align:center">🏆 Top 3 Champions</h4>
+    <div id="lb-podium" class="podium-wrap">
+      <div class="flex-center" style="padding:32px"><div class="spinner"></div></div>
+    </div>
+  </div>
+
+  <!-- My rank callout -->
+  <div class="card mb-16" style="background:rgba(79,124,255,.06);border-color:rgba(79,124,255,.3)">
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <span style="font-size:28px">🎯</span>
+      <div>
+        <div style="font-weight:700;color:var(--text)">Your Current Rank: <span id="my-rank-2" style="color:var(--accent)">–</span></div>
+        <div class="text-sm text-muted">Keep solving problems and taking tests to climb the leaderboard!</div>
+      </div>
+      <a href="/aptitude" class="btn btn-primary btn-sm" style="margin-left:auto">Improve Score →</a>
+    </div>
+  </div>
+
+  <!-- Full table -->
+  <div class="card">
+    <h4 style="margin-bottom:16px">Full Rankings</h4>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Student</th>
+            <th>College</th>
+            <th>Score</th>
+            <th>Tests</th>
+            <th>Problems</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-table">
+          <tr>
+            <td colspan="6" style="text-align:center;padding:32px">
+              <div class="spinner" style="margin:auto"></div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/pages.js"></script>
+<script>
+  // sync my-rank-2
+  document.addEventListener('DOMContentLoaded', () => {
+    const obs = new MutationObserver(() => {
+      const v = document.getElementById('my-rank')?.textContent;
+      const e = document.getElementById('my-rank-2'); if(e) e.textContent = v;
+    });
+    const mr = document.getElementById('my-rank');
+    if (mr) obs.observe(mr, {childList:true,characterData:true,subtree:true});
+  });
+</script>
+{% endblock %}

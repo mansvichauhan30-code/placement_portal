@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% block title %}My Profile – PlacePrep Portal{% endblock %}
+{% block page_title %}My Profile{% endblock %}
+
+{% block content %}
+<div id="profile-page" style="max-width:860px;margin:0 auto">
+
+  <!-- Profile header card -->
+  <div class="profile-header-card mb-20 fade-in">
+    <div class="profile-cover"></div>
+    <div class="profile-info-area">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+        <div style="display:flex;align-items:flex-end;gap:16px">
+          <div class="profile-avatar" id="profile-avatar">🎓</div>
+          <div>
+            <h3 id="profile-name-display" style="margin-bottom:2px">Loading…</h3>
+            <p class="text-sm text-muted" id="profile-college-display">–</p>
+            <p class="text-xs text-muted">Member since: <span id="profile-joined">–</span></p>
+          </div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="openModal('edit-modal')">✏️ Edit Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats row -->
+  <div class="grid-4 mb-20">
+    <div class="card" style="text-align:center">
+      <div style="font-size:26px;margin-bottom:6px">📝</div>
+      <div style="font-family:var(--font-head);font-weight:800;font-size:22px;color:var(--text)" id="ps-tests">–</div>
+      <div class="text-xs text-muted">Tests Done</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:26px;margin-bottom:6px">💻</div>
+      <div style="font-family:var(--font-head);font-weight:800;font-size:22px;color:var(--text)" id="ps-problems">–</div>
+      <div class="text-xs text-muted">Problems Solved</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:26px;margin-bottom:6px">🎙️</div>
+      <div style="font-family:var(--font-head);font-weight:800;font-size:22px;color:var(--text)" id="ps-interviews">–</div>
+      <div class="text-xs text-muted">Interviews</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:26px;margin-bottom:6px">🎯</div>
+      <div style="font-family:var(--font-head);font-weight:800;font-size:22px;color:var(--text)" id="ps-readiness">–</div>
+      <div class="text-xs text-muted">Readiness</div>
+    </div>
+  </div>
+
+  <!-- Info + security -->
+  <div class="grid-2 mb-20">
+    <div class="card">
+      <h4 style="margin-bottom:16px">Account Information</h4>
+      <div style="display:flex;flex-direction:column;gap:12px;font-size:13px">
+        {% for label, key in [('Email','email'),('College','college'),('Year','year'),('Branch','branch'),('Phone','phone')] %}
+        <div style="display:flex;justify-content:space-between;align-items:center;
+                    padding:8px 0;border-bottom:1px solid var(--border)">
+          <span class="text-muted">{{ label }}</span>
+          <span class="fw-600" id="profile-{{ key }}-view">–</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="card">
+      <h4 style="margin-bottom:16px">Security</h4>
+      <div class="alert alert-info mb-16 text-sm">
+        Keep your password strong and never share your account credentials.
+      </div>
+      <button class="btn btn-secondary btn-block" onclick="openModal('pwd-modal')">
+        🔑 Change Password
+      </button>
+
+      <div class="divider"></div>
+      <h4 style="margin-bottom:12px">Achievements</h4>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        {% for badge, label in [('🏆','Top 500'),('🔥','7-Day Streak'),('💻','First Solve'),('🧠','Aptitude Pro'),('📄','Resume Done')] %}
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 12px;
+          background:rgba(79,124,255,.08);border:1px solid rgba(79,124,255,.2);border-radius:8px">
+          <span style="font-size:16px">{{ badge }}</span>
+          <span style="font-size:12px;font-weight:600;color:var(--text)">{{ label }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Edit Profile Modal ── -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Edit Profile</h3>
+      <button class="modal-close">✕</button>
+    </div>
+
+    <!-- Avatar picker -->
+    <div class="form-group">
+      <label class="form-label">Avatar</label>
+      <div class="avatar-picker" id="avatar-picker"></div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="profile-name">Full Name</label>
+      <input class="form-control" type="text" id="profile-name" placeholder="Your full name"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="profile-college">College</label>
+      <input class="form-control" type="text" id="profile-college" placeholder="College name"/>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="form-group">
+        <label class="form-label" for="profile-year">Year</label>
+        <select class="form-control" id="profile-year">
+          <option value="1">Year 1</option>
+          <option value="2">Year 2</option>
+          <option value="3">Year 3</option>
+          <option value="4">Year 4</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="profile-branch">Branch</label>
+        <input class="form-control" type="text" id="profile-branch" placeholder="e.g. CSE"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="profile-phone">Phone</label>
+      <input class="form-control" type="text" id="profile-phone" placeholder="+91 9876543210"/>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
+      <button class="btn btn-ghost modal-close">Cancel</button>
+      <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Change Password Modal ── -->
+<div class="modal-overlay" id="pwd-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Change Password</h3>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Current Password</label>
+      <input class="form-control" type="password" id="pwd-current" placeholder="Current password"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">New Password</label>
+      <input class="form-control" type="password" id="pwd-new" placeholder="Min 6 characters"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Confirm New Password</label>
+      <input class="form-control" type="password" id="pwd-confirm" placeholder="Repeat new password"/>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
+      <button class="btn btn-ghost modal-close">Cancel</button>
+      <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/pages.js"></script>
+<script>
+  // Fill display-only fields after load
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      const u = await API.get('/api/me');
+      const fields = ['email','college','year','branch','phone'];
+      fields.forEach(f => {
+        const el = document.getElementById(`profile-${f}-view`);
+        if (el) el.textContent = u[f] || '–';
+      });
+      const nd = document.getElementById('profile-name-display');
+      if (nd) nd.textContent = u.name;
+      const cd = document.getElementById('profile-college-display');
+      if (cd) cd.textContent = (u.college||'') + (u.year ? ` · Year ${u.year}` : '');
+    } catch {}
+  });
+</script>
+{% endblock %}

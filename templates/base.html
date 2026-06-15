@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}PlacePrep Portal{% endblock %}</title>
+  <link rel="stylesheet" href="/static/css/main.css"/>
+  <link rel="stylesheet" href="/static/css/dashboard.css"/>
+  {% block extra_css %}{% endblock %}
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>"/>
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo">PlacePrep</div>
+      <div class="sub">Placement Portal</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">Main</div>
+      <a class="nav-link" href="/dashboard">
+        <span class="nav-icon">🏠</span> Dashboard
+      </a>
+
+      <div class="nav-section">Preparation</div>
+      <a class="nav-link" href="/aptitude">
+        <span class="nav-icon">🧠</span> Aptitude Tests
+      </a>
+      <a class="nav-link" href="/coding">
+        <span class="nav-icon">💻</span> Coding Practice
+      </a>
+      <a class="nav-link" href="/resume">
+        <span class="nav-icon">📄</span> Resume Analyzer
+      </a>
+      <a class="nav-link" href="/interview">
+        <span class="nav-icon">🎙️</span> Mock Interviews
+      </a>
+
+      <div class="nav-section">Insights</div>
+      <a class="nav-link" href="/progress">
+        <span class="nav-icon">📈</span> Analytics
+      </a>
+      <a class="nav-link" href="/leaderboard">
+        <span class="nav-icon">🏆</span> Leaderboard
+      </a>
+
+      <div class="nav-section">Resources</div>
+      <a class="nav-link" href="/resources">
+        <span class="nav-icon">📚</span> Study Resources
+      </a>
+
+      <div class="nav-section">Account</div>
+      <a class="nav-link" href="/profile">
+        <span class="nav-icon">👤</span> My Profile
+      </a>
+      {% if session.get('role') == 'admin' %}
+      <a class="nav-link" href="/admin">
+        <span class="nav-icon">⚙️</span> Admin Panel
+      </a>
+      {% endif %}
+    </nav>
+
+    <div class="sidebar-footer">
+      PlacePrep v2.0 &copy; 2025
+    </div>
+  </aside>
+
+  <!-- Sidebar overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ── Main ── -->
+  <div class="main-content">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
+        <span class="topbar-title">{% block page_title %}Dashboard{% endblock %}</span>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-icon btn-ghost" data-theme-toggle title="Toggle theme">
+          <span data-theme-icon>☀️</span>
+        </button>
+        <div class="topbar-avatar" data-user-avatar title="Profile">
+          {{ session.get('name', 'S')[0] }}
+        </div>
+        <span style="font-size:13px;font-weight:500;color:var(--text2)" data-user-name>
+          {{ session.get('name', 'Student') }}
+        </span>
+        <button class="btn btn-sm btn-ghost" data-logout>Logout</button>
+      </div>
+    </header>
+
+    <!-- Page content -->
+    <main class="page-body">
+      {% block content %}{% endblock %}
+    </main>
+
+  </div><!-- /main-content -->
+</div><!-- /app-layout -->
+
+<!-- Toast container -->
+<div id="toast-container"></div>
+
+<script src="/static/js/core.js"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

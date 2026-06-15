@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}Resume Analyzer – PlacePrep Portal{% endblock %}
+{% block page_title %}Resume Analyzer{% endblock %}
+
+{% block content %}
+<div id="resume-page">
+
+<!-- Input area -->
+<div id="resume-input-area">
+  <div class="page-header">
+    <h2>Resume Analyzer</h2>
+    <p>Paste your resume text or upload a file to get an AI-powered score, skill gap analysis, and improvement tips.</p>
+  </div>
+
+  <div class="grid-2" style="align-items:start">
+    <div>
+      <!-- Upload -->
+      <div class="resume-upload-area card mb-16" id="resume-upload-area">
+        <div class="upload-icon">📄</div>
+        <h4 style="margin-bottom:6px">Drop your resume here</h4>
+        <p class="text-sm text-muted mb-16">Supports .txt, .pdf (text), .doc — max 2 MB</p>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('resume-file').click()">
+          Browse Files
+        </button>
+        <input type="file" id="resume-file" accept=".txt,.pdf,.doc,.docx" class="hidden"/>
+        <div id="file-name" class="text-sm text-muted mt-12"></div>
+      </div>
+
+      <!-- Or paste -->
+      <div class="form-group">
+        <label class="form-label">Or paste resume text here</label>
+        <textarea class="form-control" id="resume-text" rows="12"
+          placeholder="Paste your full resume content here — objective, education, skills, experience, projects, achievements..."></textarea>
+      </div>
+
+      <button class="btn btn-primary btn-block" id="btn-analyze" onclick="analyzeResume()">
+        🔍 Analyze Resume
+      </button>
+    </div>
+
+    <div>
+      <div class="card mb-16">
+        <h4 style="margin-bottom:12px">✅ What We Check</h4>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--text2)">
+          <div>📋 <strong style="color:var(--text)">Section Completeness</strong> — Contact, Summary, Education, Experience, Projects, Skills, Achievements</div>
+          <div>🔧 <strong style="color:var(--text)">Skills Detection</strong> — 50+ technologies and tools scanned</div>
+          <div>🎯 <strong style="color:var(--text)">ATS Compatibility</strong> — Keyword density and format check</div>
+          <div>📏 <strong style="color:var(--text)">Content Quality</strong> — Length, action verbs, quantified results</div>
+          <div>💡 <strong style="color:var(--text)">Improvement Tips</strong> — Personalised suggestions to boost your score</div>
+        </div>
+      </div>
+      <div class="card">
+        <h4 style="margin-bottom:12px">📜 Previous Analyses</h4>
+        <div id="resume-history"><p class="text-muted text-sm">Loading…</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Results area -->
+<div id="resume-results" class="hidden fade-in">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+    <h2>Analysis Report</h2>
+    <button class="btn btn-ghost" onclick="resetResume()">← Analyze Another</button>
+  </div>
+
+  <!-- Score + sections -->
+  <div class="grid-2 mb-24" style="align-items:start">
+    <div class="card text-center">
+      <div class="resume-score-ring" style="margin:0 auto 16px">
+        <div id="resume-score-circle"></div>
+        <div class="ring-label">
+          <span style="font-family:var(--font-head);font-weight:800;font-size:26px;color:var(--text)"
+                id="resume-overall-score">–</span>
+          <span style="font-size:11px;color:var(--text2)">/100</span>
+        </div>
+      </div>
+      <div id="resume-score-badge" class="score-badge" style="margin:0 auto 12px">–</div>
+      <div class="flex-center gap-16 mt-12" style="flex-wrap:wrap">
+        <div style="text-align:center">
+          <div style="font-family:var(--font-head);font-weight:700;font-size:20px;color:var(--accent)"
+               id="resume-ats-score">–</div>
+          <div class="text-xs text-muted">ATS Score</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4 style="margin-bottom:14px">Sections Checklist</h4>
+      <div id="resume-sections"></div>
+    </div>
+  </div>
+
+  <!-- Skills -->
+  <div class="grid-2 mb-24">
+    <div class="card">
+      <h4 style="margin-bottom:14px">✅ Skills Detected</h4>
+      <div id="skills-found"><p class="text-muted text-sm">Analyzing…</p></div>
+    </div>
+    <div class="card">
+      <h4 style="margin-bottom:14px">⚠️ Missing Key Skills</h4>
+      <div id="skills-missing"><p class="text-muted text-sm">Analyzing…</p></div>
+    </div>
+  </div>
+
+  <!-- Suggestions -->
+  <div class="card">
+    <h4 style="margin-bottom:16px">💡 Improvement Suggestions</h4>
+    <div id="resume-suggestions"></div>
+  </div>
+</div>
+
+</div>
+{% endblock %}
+{% block extra_js %}<script src="/static/js/pages.js"></script>{% endblock %}

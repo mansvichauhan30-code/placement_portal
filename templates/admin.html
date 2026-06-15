@@ -1,0 +1,323 @@
+{% extends "base.html" %}
+{% block title %}Admin Panel – PlacePrep Portal{% endblock %}
+{% block page_title %}Admin Panel{% endblock %}
+
+{% block content %}
+<div id="admin-page">
+
+  <div class="page-header flex-between flex-wrap" style="gap:12px">
+    <div>
+      <h2>Admin Panel</h2>
+      <p>Manage students, questions, coding challenges and view platform analytics.</p>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-ghost btn-sm" onclick="openModal('announcement-modal')">📢 Announcement</button>
+    </div>
+  </div>
+
+  <!-- Tab bar -->
+  <div class="admin-tab-bar">
+    <button class="admin-tab active" data-tab="overview"   onclick="switchAdminTab('overview')">📊 Overview</button>
+    <button class="admin-tab"        data-tab="students"   onclick="switchAdminTab('students')">👥 Students</button>
+    <button class="admin-tab"        data-tab="questions"  onclick="switchAdminTab('questions')">📝 Questions</button>
+    <button class="admin-tab"        data-tab="challenges" onclick="switchAdminTab('challenges')">💻 Challenges</button>
+    <button class="admin-tab"        data-tab="analytics"  onclick="switchAdminTab('analytics')">📈 Analytics</button>
+  </div>
+
+  <!-- ── OVERVIEW TAB ── -->
+  <div data-tab-panel="overview" class="fade-in">
+    <div class="grid-4 mb-24">
+      <div class="card card-stat">
+        <span class="stat-icon">👥</span>
+        <span class="stat-value" id="admin-stat-users">–</span>
+        <span class="stat-label">Total Students</span>
+        <span class="stat-trend">Registered</span>
+      </div>
+      <div class="card card-stat">
+        <span class="stat-icon">🟢</span>
+        <span class="stat-value" id="admin-stat-active">–</span>
+        <span class="stat-label">Active Today</span>
+        <span class="stat-trend">Logged in today</span>
+      </div>
+      <div class="card card-stat">
+        <span class="stat-icon">📝</span>
+        <span class="stat-value" id="admin-stat-tests">–</span>
+        <span class="stat-label">Tests Today</span>
+        <span class="stat-trend">Taken today</span>
+      </div>
+      <div class="card card-stat">
+        <span class="stat-icon">💻</span>
+        <span class="stat-value" id="admin-stat-submissions">–</span>
+        <span class="stat-label">Submissions Today</span>
+        <span class="stat-trend">Code submitted</span>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <!-- Quick actions -->
+      <div class="card">
+        <h4 style="margin-bottom:16px">⚡ Quick Actions</h4>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          {% for action, desc, onclick in [
+            ('➕ Add Question',     'Add a new aptitude question',         "openModal('add-question-modal')"),
+            ('💻 Add Challenge',    'Add a new coding problem',           "switchAdminTab('challenges');setTimeout(()=>openModal('add-challenge-modal'),100)"),
+            ('📢 Announcement',     'Send to all students',               "openModal('announcement-modal')"),
+            ('👥 View Students',    'Manage student accounts',            "switchAdminTab('students')"),
+          ] %}
+          <div onclick="{{ onclick }}"
+               style="display:flex;justify-content:space-between;align-items:center;
+                      padding:12px 14px;background:var(--bg3);border-radius:var(--r2);
+                      cursor:pointer;transition:background var(--transition)"
+               onmouseover="this.style.background='var(--surface2)'"
+               onmouseout="this.style.background='var(--bg3)'">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--text)">{{ action }}</div>
+              <div style="font-size:11px;color:var(--text3)">{{ desc }}</div>
+            </div>
+            <span style="color:var(--text3)">→</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Platform health -->
+      <div class="card">
+        <h4 style="margin-bottom:16px">🔧 Platform Health</h4>
+        <div>
+          <div class="platform-health-item">
+            <span class="text-muted">API Response</span>
+            <span class="health-val good">✓ 99.2% uptime</span>
+          </div>
+          <div class="platform-health-item">
+            <span class="text-muted">Database</span>
+            <span class="health-val good">✓ Connected</span>
+          </div>
+          <div class="platform-health-item">
+            <span class="text-muted">File Storage</span>
+            <span class="health-val warning">⚠ 89% capacity</span>
+          </div>
+          <div class="platform-health-item">
+            <span class="text-muted">Avg Score (Platform)</span>
+            <span class="health-val good" id="admin-stat-avg">–</span>
+          </div>
+          <div class="platform-health-item">
+            <span class="text-muted">Session</span>
+            <span class="health-val good">✓ Active</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STUDENTS TAB ── -->
+  <div data-tab-panel="students" class="hidden fade-in">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+      <h4>Student Accounts</h4>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th><th>Name</th><th>Email</th><th>College</th><th>Year</th><th>Status</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="students-tbody">
+            <tr><td colspan="7" style="text-align:center;padding:24px"><div class="spinner" style="margin:auto"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="students-pagination" style="display:flex;gap:6px;margin-top:14px;flex-wrap:wrap"></div>
+    </div>
+  </div>
+
+  <!-- ── QUESTIONS TAB ── -->
+  <div data-tab-panel="questions" class="hidden fade-in">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+      <h4>Aptitude Question Bank</h4>
+      <button class="btn btn-primary btn-sm" onclick="openModal('add-question-modal')">+ Add Question</button>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Category</th><th>Difficulty</th><th>Question</th><th>Action</th></tr>
+          </thead>
+          <tbody id="questions-tbody">
+            <tr><td colspan="5" style="text-align:center;padding:24px"><div class="spinner" style="margin:auto"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CHALLENGES TAB ── -->
+  <div data-tab-panel="challenges" class="hidden fade-in">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+      <h4>Coding Challenges</h4>
+      <button class="btn btn-primary btn-sm" onclick="openModal('add-challenge-modal')">+ Add Challenge</button>
+    </div>
+    <div id="challenges-list">
+      <div class="flex-center" style="padding:24px"><div class="spinner"></div></div>
+    </div>
+  </div>
+
+  <!-- ── ANALYTICS TAB ── -->
+  <div data-tab-panel="analytics" class="hidden fade-in">
+    <div class="grid-2">
+      <div class="card">
+        <h4 style="margin-bottom:16px">Score Distribution</h4>
+        <div id="score-distribution"></div>
+      </div>
+      <div class="card">
+        <h4 style="margin-bottom:16px">Module Usage</h4>
+        <div id="module-usage"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Add Question Modal ── -->
+<div class="modal-overlay" id="add-question-modal">
+  <div class="modal" style="max-width:580px">
+    <div class="modal-header">
+      <h3>Add Aptitude Question</h3>
+      <button class="modal-close">✕</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="form-group">
+        <label class="form-label">Category *</label>
+        <select class="form-control" id="aq-category">
+          <option value="quantitative">Quantitative</option>
+          <option value="logical">Logical</option>
+          <option value="verbal">Verbal</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Difficulty *</label>
+        <select class="form-control" id="aq-difficulty">
+          <option value="easy">Easy</option>
+          <option value="medium" selected>Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Question *</label>
+      <textarea class="form-control" id="aq-question" rows="3" placeholder="Enter the question text"></textarea>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="form-group">
+        <label class="form-label">Option A *</label>
+        <input class="form-control" type="text" id="aq-opt-a" placeholder="Option A"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Option B *</label>
+        <input class="form-control" type="text" id="aq-opt-b" placeholder="Option B"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Option C *</label>
+        <input class="form-control" type="text" id="aq-opt-c" placeholder="Option C"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Option D *</label>
+        <input class="form-control" type="text" id="aq-opt-d" placeholder="Option D"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Correct Answer *</label>
+      <select class="form-control" id="aq-correct">
+        <option value="A">A</option><option value="B">B</option>
+        <option value="C">C</option><option value="D">D</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Explanation (optional)</label>
+      <input class="form-control" type="text" id="aq-explanation" placeholder="Brief explanation of the answer"/>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="btn btn-ghost modal-close">Cancel</button>
+      <button class="btn btn-primary" onclick="addQuestion()">Add Question</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Add Challenge Modal ── -->
+<div class="modal-overlay" id="add-challenge-modal">
+  <div class="modal" style="max-width:600px">
+    <div class="modal-header">
+      <h3>Add Coding Challenge</h3>
+      <button class="modal-close">✕</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Title *</label>
+        <input class="form-control" id="ch-title" type="text" placeholder="e.g. Two Sum"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <input class="form-control" id="ch-category" type="text" placeholder="Arrays"/>
+      </div>
+      <div class="form-group" style="grid-column:2/4">
+        <label class="form-label">Difficulty *</label>
+        <select class="form-control" id="ch-difficulty">
+          <option value="easy">Easy</option>
+          <option value="medium" selected>Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description *</label>
+      <textarea class="form-control" id="ch-description" rows="3" placeholder="Problem statement"></textarea>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="form-group">
+        <label class="form-label">Sample Input</label>
+        <textarea class="form-control" id="ch-sample-input" rows="2" placeholder="nums=[1,2], target=3"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sample Output</label>
+        <textarea class="form-control" id="ch-sample-output" rows="2" placeholder="[0,1]"></textarea>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Constraints</label>
+      <input class="form-control" id="ch-constraints" type="text" placeholder="1 ≤ n ≤ 10⁴"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Hints</label>
+      <input class="form-control" id="ch-hints" type="text" placeholder="Use a hash map…"/>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="btn btn-ghost modal-close">Cancel</button>
+      <button class="btn btn-primary" onclick="addChallenge()">Add Challenge</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Announcement Modal ── -->
+<div class="modal-overlay" id="announcement-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>📢 Send Announcement</h3>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Title *</label>
+      <input class="form-control" id="ann-title" type="text" placeholder="Announcement title"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Message *</label>
+      <textarea class="form-control" id="ann-body" rows="4" placeholder="Write your message to all students…"></textarea>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="btn btn-ghost modal-close">Cancel</button>
+      <button class="btn btn-primary" onclick="sendAnnouncement()">📤 Send to All Students</button>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block extra_js %}<script src="/static/js/admin.js"></script>{% endblock %}

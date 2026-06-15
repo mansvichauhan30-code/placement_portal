@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block title %}Coding Practice – PlacePrep Portal{% endblock %}
+{% block page_title %}Coding Practice{% endblock %}
+
+{% block content %}
+
+<!-- ── LIST VIEW ── -->
+<div id="view-list">
+  <div class="page-header flex-between flex-wrap" style="gap:12px">
+    <div>
+      <h2>Coding Practice</h2>
+      <p>Solve DSA problems with a built-in code editor and track your progress.</p>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="btn btn-primary btn-sm"  data-diff-filter="all">All</button>
+      <button class="btn btn-ghost  btn-sm"   data-diff-filter="easy">Easy</button>
+      <button class="btn btn-ghost  btn-sm"   data-diff-filter="medium">Medium</button>
+      <button class="btn btn-ghost  btn-sm"   data-diff-filter="hard">Hard</button>
+    </div>
+  </div>
+
+  <div class="grid-3 mb-16" style="gap:12px">
+    <div class="card" style="text-align:center;padding:16px">
+      <div style="font-size:24px;margin-bottom:4px">✅</div>
+      <div style="font-family:var(--font-head);font-weight:700;font-size:18px;color:var(--success)">–</div>
+      <div class="text-xs text-muted mt-8">Easy Solved</div>
+    </div>
+    <div class="card" style="text-align:center;padding:16px">
+      <div style="font-size:24px;margin-bottom:4px">🔥</div>
+      <div style="font-family:var(--font-head);font-weight:700;font-size:18px;color:var(--warning)">–</div>
+      <div class="text-xs text-muted mt-8">Medium Solved</div>
+    </div>
+    <div class="card" style="text-align:center;padding:16px">
+      <div style="font-size:24px;margin-bottom:4px">⚡</div>
+      <div style="font-family:var(--font-head);font-weight:700;font-size:18px;color:var(--danger)">–</div>
+      <div class="text-xs text-muted mt-8">Hard Solved</div>
+    </div>
+  </div>
+
+  <div id="challenge-list">
+    <div class="flex-center" style="padding:40px"><div class="spinner"></div></div>
+  </div>
+</div>
+
+<!-- ── PROBLEM VIEW ── -->
+<div id="view-problem" class="hidden">
+  <button class="btn btn-ghost btn-sm mb-16" onclick="showCodingView('list');loadChallenges()">
+    ← Back to Problems
+  </button>
+
+  <div class="coding-split">
+    <!-- Left: Problem description -->
+    <div class="coding-panel">
+      <div class="coding-panel-header">
+        <div>
+          <div id="prob-difficulty"></div>
+        </div>
+        <div id="prob-category"></div>
+      </div>
+      <div class="coding-panel-body">
+        <div id="solved-banner" class="alert alert-success mb-16 hidden">
+          ✓ You've already solved this problem!
+        </div>
+
+        <h3 id="prob-title" style="margin-bottom:12px">–</h3>
+
+        <p style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:20px"
+           id="prob-description"></p>
+
+        <div style="margin-bottom:16px">
+          <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px">📥 Sample Input</div>
+          <pre id="prob-sample-input"
+               style="background:var(--bg3);padding:10px 12px;border-radius:var(--r2);font-size:12px;
+                      color:var(--accent3);overflow:auto;line-height:1.6"></pre>
+        </div>
+        <div style="margin-bottom:16px">
+          <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px">📤 Expected Output</div>
+          <pre id="prob-sample-output"
+               style="background:var(--bg3);padding:10px 12px;border-radius:var(--r2);font-size:12px;
+                      color:var(--success);overflow:auto;line-height:1.6"></pre>
+        </div>
+        <div style="margin-bottom:16px">
+          <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px">📏 Constraints</div>
+          <p id="prob-constraints" style="font-size:12px;color:var(--text2)"></p>
+        </div>
+
+        <button class="btn btn-ghost btn-sm" id="btn-hint" onclick="toggleHint()">
+          💡 Show Hint
+        </button>
+        <div id="hint-box" class="alert alert-info mt-12 hidden" id="prob-hints"></div>
+
+        <!-- Submission history -->
+        <div class="divider"></div>
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px">
+          Submission History
+        </div>
+        <div id="submission-history"><p class="text-muted text-sm">Loading…</p></div>
+      </div>
+    </div>
+
+    <!-- Right: Editor -->
+    <div class="coding-panel">
+      <div class="coding-panel-header">
+        <span style="font-size:13px;font-weight:600;color:var(--text)">Code Editor</span>
+        <select class="form-control" id="lang-select" onchange="onLangChange(this)"
+                style="width:auto;padding:5px 10px;font-size:12px">
+          <option value="python">Python</option>
+          <option value="java">Java</option>
+          <option value="cpp">C++</option>
+          <option value="javascript">JavaScript</option>
+        </select>
+      </div>
+      <div class="coding-panel-body" style="display:flex;flex-direction:column;gap:12px">
+        <textarea id="code-editor" class="code-editor" spellcheck="false"
+                  placeholder="// Write your solution here..."></textarea>
+
+        <div id="submit-result" class="hidden"></div>
+
+        <button class="btn btn-primary btn-block" id="btn-submit-code" onclick="submitCode()">
+          ▶ &nbsp;Run &amp; Submit
+        </button>
+
+        <div class="alert alert-info text-sm">
+          <strong>Note:</strong> In this demo environment, submissions with ≥20 characters are
+          accepted. In production, code runs in a sandboxed container.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/coding.js"></script>
+<script>
+  // patch hint box to show hints text
+  const origRender = renderProblem;
+  renderProblem = function(c) {
+    origRender(c);
+    const hb = document.getElementById('hint-box');
+    if (hb) hb.textContent = c.hints || 'No hints available.';
+  };
+</script>
+{% endblock %}

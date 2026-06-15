@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}Mock Interviews – PlacePrep Portal{% endblock %}
+{% block page_title %}Mock Interviews{% endblock %}
+
+{% block content %}
+
+<!-- Select view -->
+<div id="iv-view-select">
+  <div class="page-header">
+    <h2>Mock Interviews</h2>
+    <p>Practice with real interview questions from top companies. Get instant performance feedback.</p>
+  </div>
+
+  <div class="grid-2 mb-24">
+    <div class="card card-hover" style="padding:28px;cursor:pointer" onclick="startInterview('technical')">
+      <div style="font-size:40px;margin-bottom:16px">💻</div>
+      <h3 style="margin-bottom:8px">Technical Interview</h3>
+      <p class="mb-16">Data Structures, Algorithms, OOP, Databases, OS, Networking, System Design — commonly asked in product and service companies.</p>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="badge badge-blue">5 Questions · ~15 min</span>
+        <button class="btn btn-primary btn-sm">Start →</button>
+      </div>
+    </div>
+
+    <div class="card card-hover" style="padding:28px;cursor:pointer" onclick="startInterview('hr')">
+      <div style="font-size:40px;margin-bottom:16px">🤝</div>
+      <h3 style="margin-bottom:8px">HR Interview</h3>
+      <p class="mb-16">Behavioral, situational, and personality questions — Tell me about yourself, strengths/weaknesses, future goals, salary expectations.</p>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="badge badge-green">5 Questions · ~10 min</span>
+        <button class="btn btn-primary btn-sm">Start →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tips -->
+  <div class="card mb-24">
+    <h4 style="margin-bottom:14px">🌟 Interview Tips</h4>
+    <div class="grid-2">
+      <div style="font-size:13px;color:var(--text2);margin-bottom:10px;display:flex;gap:8px">
+        <span style="color:var(--accent);flex-shrink:0">→</span>
+        Use the <strong style="color:var(--text)">STAR method</strong> (Situation, Task, Action, Result) for behavioural questions.
+      </div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:10px;display:flex;gap:8px">
+        <span style="color:var(--accent);flex-shrink:0">→</span>
+        It's okay to <strong style="color:var(--text)">think before answering</strong>. Interviewers value structured thinking.
+      </div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:10px;display:flex;gap:8px">
+        <span style="color:var(--accent);flex-shrink:0">→</span>
+        Ask <strong style="color:var(--text)">clarifying questions</strong> — it shows analytical thinking and communication skills.
+      </div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:10px;display:flex;gap:8px">
+        <span style="color:var(--accent);flex-shrink:0">→</span>
+        Be honest about knowledge gaps; explain <strong style="color:var(--text)">how you would find</strong> the answer.
+      </div>
+    </div>
+  </div>
+
+  <!-- History -->
+  <div class="card">
+    <h4 style="margin-bottom:14px">📜 Session History</h4>
+    <div id="iv-history"><p class="text-muted text-sm">Loading…</p></div>
+  </div>
+</div>
+
+<!-- Session view -->
+<div id="iv-view-session" class="hidden fade-in">
+  <div style="max-width:700px;margin:0 auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+      <div>
+        <h3 style="font-size:16px;text-transform:capitalize" id="iv-q-type">Interview</h3>
+        <p class="text-muted text-sm">
+          Question <span id="iv-q-num">1</span> of <span id="iv-q-total">5</span>
+        </p>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="showIvView('select')">Exit Session</button>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-wrap" style="margin-bottom:20px;height:5px">
+      <div class="progress-bar" id="iv-progress" style="width:0%"></div>
+    </div>
+
+    <!-- Question card -->
+    <div class="interview-question-card mb-16">
+      <div class="question-number">QUESTION <span id="iv-q-num-2">1</span></div>
+      <div style="font-size:17px;font-weight:600;color:var(--text);line-height:1.6" id="iv-question">–</div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <span id="iv-q-diff" class="badge badge-orange">medium</span>
+      </div>
+    </div>
+
+    <!-- Answer -->
+    <div class="card mb-16">
+      <label class="form-label">Your Answer</label>
+      <textarea class="interview-answer" id="iv-answer"
+        placeholder="Write a structured answer. For HR questions, use the STAR method. For technical questions, explain your thought process clearly…"></textarea>
+      <div style="display:flex;justify-content:flex-end;margin-top:10px">
+        <button class="btn btn-ghost btn-sm" id="btn-sample" onclick="toggleSampleAnswer()">
+          💡 Sample Answer
+        </button>
+      </div>
+      <div class="sample-answer" id="sample-answer"></div>
+    </div>
+
+    <!-- Navigation -->
+    <div style="display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap">
+      <button class="btn btn-ghost"   id="iv-btn-prev" onclick="ivPrev()">← Previous</button>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-primary"         id="iv-btn-next"   onclick="ivNext()">Next →</button>
+        <button class="btn btn-primary hidden"  id="iv-btn-submit" onclick="submitInterview()">Submit Interview ✓</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Result view -->
+<div id="iv-view-result" class="hidden fade-in">
+  <div style="max-width:560px;margin:0 auto;text-align:center">
+    <div class="card" style="padding:40px;margin-bottom:20px">
+      <div style="font-size:48px;margin-bottom:16px">🎉</div>
+      <div style="position:relative;display:inline-block;margin-bottom:16px">
+        <div id="iv-score-circle"></div>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;
+                    align-items:center;justify-content:center">
+          <span style="font-family:var(--font-head);font-weight:800;font-size:24px;color:var(--text)"
+                id="iv-result-score">–</span>
+        </div>
+      </div>
+      <p class="text-muted mb-16" id="iv-result-feedback">–</p>
+      <div class="grid-3 mb-24" id="iv-breakdown"></div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="startInterview(ivState.type)">Retry</button>
+        <button class="btn btn-ghost"   onclick="showIvView('select')">← Back</button>
+        <a href="/progress" class="btn btn-secondary">View Analytics</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block extra_js %}<script src="/static/js/pages.js"></script>{% endblock %}
